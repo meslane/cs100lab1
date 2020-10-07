@@ -350,7 +350,7 @@ Make sure to replace the above `<github-url>` with the url that you copied from 
 
 ### Git Status, Add & Commit
 
-Remember our program and its source/header files from earlier? Go ahead and move all of those files into the new `lab-01-intro-to-sct-...` folder.
+Remember our program and its source/header files from earlier? Go ahead and move all of those files (including src/header files) into the new `lab-01-intro-to-sct-...` folder.
 
 Git doesn’t automatically keep track of new files for us. Instead, we have to tell Git to start tracking these new files. Run the following command:
 
@@ -367,6 +367,7 @@ git add header/rectangle.hpp
 git add src/rectangle.cpp
 git add src/main1.cpp
 git add src/new_main.cpp
+git add CMakeLists.txt
 git add .gitignore
 ```
 
@@ -583,7 +584,7 @@ ADD_EXECUTABLE(c-echo
 
 Now, run `cmake3 .` followed by `make` to build the executable.
 
-Now that we've switched the build system, go ahead and run a few test commands on the new executable and re-run your `array.sh` file to make sure its still functioning as we expected. Since we made what could be a major breaking change to the program, its a good idea to make sure we test the changes to verify it's still working as expected before we make any new changes. We should also update our `.gitignore` file to ignore the generated build files:
+Now that we've switched the build system, go ahead and run a few test commands on the new executable to make sure its still functioning as we expected. Since we made what could be a major breaking change to the program, its a good idea to make sure we test the changes to verify it's still working as expected before we make any new changes. We should also update our `.gitignore` file to ignore the generated build files:
 
 ```
 CMakeCache.txt
@@ -636,7 +637,7 @@ TARGET_LINK_LIBRARIES(test gtest)
 TARGET_COMPILE_DEFINITIONS(test PRIVATE gtest_disable_pthreads=ON)
 ```
 
-These changes do a few things for us. The first is the `ADD_SUBDIRECTORY` function, which makes CMake aware of the gtest framework. It will then look into that directory for another CMakeLists.txt file which will tell it how to compile that code and include it in our own. Next we have a `SET` function, which we use to set the C++ standard that we want to compile against to C++11. This is essentially equivalent to adding a `-std=c++11` flag to your g++ compilation. We also have a new `ADD_EXECUTABLE` line which requires a new test.cpp file. This test.cpp file is where we will write our tests and create a main specifically for running those tests. This new executable will just run the tests and won't run the normal program functionality, so we still need the old executable to be generated. Finally, we add a `TARGET_LINK_LIBRARIES` function, which links our test program to the gtest library, making gtest a dependency for the test executable (note that the name *gtest* is actually defined by the Google Unit Test Framework, not by us). Finally, we have a `TARGET_COMPILE_DEFINITIONS` function, which adds a compilation definition to the build, which in this case disables googletest from looking for the pthreads library which hammer doesn't have. This is equivalent to adding a `-Dgtest_disable_pthreads=ON` flag which is a compiler pre-processor option. If you are doing this lab on you local machine,  you may be able to remove this last line of the CMakeLists.txt file.
+These changes do a few things for us. The first is the `ADD_SUBDIRECTORY` function, which makes CMake aware of the gtest framework. It will then look into that directory for another CMakeLists.txt file which will tell it how to compile that code and include it in our own. Next we have a `SET` function, which we use to set the C++ standard that we want to compile against to C++11. This is essentially equivalent to adding a `-std=c++11` flag to your g++ compilation. We also have a new `ADD_EXECUTABLE` line which requires a new test.cpp file. This test.cpp file is where we will write **all** our tests and create a main specifically for running those tests. This new executable will just run the tests and won't run the normal program functionality, so we still need the old executable to be generated. Finally, we add a `TARGET_LINK_LIBRARIES` function, which links our test program to the gtest library, making gtest a dependency for the test executable (note that the name *gtest* is actually defined by the Google Unit Test Framework, not by us). Finally, we have a `TARGET_COMPILE_DEFINITIONS` function, which adds a compilation definition to the build, which in this case disables googletest from looking for the pthreads library which hammer doesn't have. This is equivalent to adding a `-Dgtest_disable_pthreads=ON` flag which is a compiler pre-processor option. If you are doing this lab on you local machine,  you may be able to remove this last line of the CMakeLists.txt file.
 
 ## Writing a Unit Test
 
@@ -732,6 +733,7 @@ TEST(EchoTest, EmptyString) {
 ```
 
 This new test makes two valuable additions to our system. The first is if another developer modifies the functionality of our echo function to do anything on a blank input except return nothing (throw an error for example) then they will fail the test and have to consciously make the decision about changing to test to match the function, or changing the function to meet the test (as you did earlier). The second thing we gain is the usage of tests as a form of documentation. If I am wondering what the result of zero input to the function is, I can check the tests and assuming there is a test with that edge case I can see what result the tests expects. In this way a comprehensive set of tests is its own form of documentation (although you should consider this a supplement form of documentation, not a replacement for actual documentation).
+`NOTE: All the tests should be added in the same file test.cpp`
 
 ## Submission
 
