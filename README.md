@@ -510,19 +510,6 @@ This will push all the commits you've made since your last push assuming there h
 
 # Part 2: Unit Testing in C++
 
-## Preparation
-In this section, you are suggested to work on your repository in a different folder by following the instructions described below:
-
-* First you need to move out of the current directory by typing `cd ..`, or directly move to the home folder by `cd ~`.
-
-* You will need to rename the existing lab1 directory to avoid conflicts since you need to clone your repository again. You can rename your folder by `mv <current_lab1_folder> ./lab-01-part1`
-
-* Then you need to clone the lab1 repository again from your Github using the command: `git clone <github-url>`. Please replace `<github-url>` to the one you used before. Note that you can also specify the target folder when cloning by `git clone <github-url> <destination_folder>`
-
-* Next, fo into the newly created lab-01 folder by `cd <your_lab01_directory_path>`.
-
-The above instructions ensure your work for this part is done separately in another directory.
-
 ## Unit testing
 
 Testing is a very important part of the software development process that is often overlooked in university curriculum. We know because **Google told us specifically it was something they found lacking in their incoming interns and new grad hires**, so we suggest you take this unit seriously along with the testing you will be doing for your projects (and add it to your resume when you apply for internships).
@@ -616,9 +603,9 @@ Now we need to modify our CMakeLists.txt file so it knows to compile the gtest c
 ```
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
-ADD_SUBDIRECTORY(googletest)
-
 SET(CMAKE_CXX_STANDARD 11)
+
+ADD_SUBDIRECTORY(googletest)
 
 ADD_EXECUTABLE(area_calculator
     src/main1.cpp
