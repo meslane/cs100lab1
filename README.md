@@ -16,13 +16,15 @@ If you are using a Linux or Mac computer, you can run the following command in t
 ssh <your_CS_username>@hammer.cs.ucr.edu
 ```
 
-If you are using a Windows computer, you will first need to install a program called PuTTY, which can be installed from [putty.org](http://www.putty.org/). When you open PuTTY, there will be a box for a “Host Name”, where you will input `<your_CS_username>@hammer.cs.ucr.edu`.
+If you are using a Windows computer, you will first need to install a program called PuTTY, which can be installed from [putty.org](http://www.putty.org/). When you open PuTTY, there will be a box for a “Host Name”, where you will input `<your_CS_username>@hammer.cs.ucr.edu`.  It is also possible to use ssh on Windows through [cygwin](http://www.cygwin.com/) or [WSL](https://docs.microsoft.com/en-us/windows/wsl/about), both of which emulate a Linux-like environment within Windows.
 
 > For both of the above commands you should replace <your_CS_username> with the username provided to you by the CS department. If you do not yet have a CS account ask your TA to help you register a new account (some students will need to go through CS systems to get an account, your TA will advise you if this is the case).
 
 You may be asked to exchange keys with the server (which you should allow). Next, you will be prompted for your password. You should note that when typing your password, no characters will be displayed even though you are still typing (this is a security measure).
 
 > Note: You are not required to develop on the `hammer` server for this course, and are encouraged to use your own development environment. However, you will need to validate that your code will run correctly on the `hammer` server as we cannot account for differences in everyone's individual development environments. You are required to host your code on GitHub.
+
+> Note: If you are off UCR campus, you may not be able to access `hammer` directly, since this machine is behind the department firewall.  You will need to log into `bolt` first (`ssh <your_CS_username>@bolt.cs.ucr.edu`).  You will then be able to ssh into `hammer` from `bolt`.
 
 ## The Linux File System
 
@@ -60,9 +62,11 @@ rm -rf example_dir
 
 `rm` is the command used to "remove" files or directories. If you have a regular file you can enter `rm <filename>` without any flags. However, since we are dealing with a directory we need to add the extra `-rf` options. `r` recursively removes files and directories within the directory you are removing and 'f' ignores nonexistent files and doesn't prompt the user to confirm each deletion. That said, with great power comes great responsibility. Use `rm -rf` only when necessary. The last thing you want is to accidently delete important files or directories.
 
-## The `bashrc` File
+> Note: There are two useful ways to learn about the usage of a command (including a list of options available and what they do).  The first is the `man` utility (as in "owner's *man*ual").  You can type `man ls` to see usage instruction for the `ls` command.  In addition, most commands are self-documenting and support the `--help` flag. You can get similar information for `ls` by running `ls --help`.
 
-Another example of a hidden file used by a system is the `.bashrc` file, which you should see when running `ls -a` from your home directory (`~`). The `bashrc` file is a config file that is executed every time your terminal loads such as when you login to `hammer` over SSH. Go ahead and type `cat ~/.bashrc` to view its contents. You should see something like below:
+## The `.bashrc` File
+
+Another example of a hidden file used by a system is the `.bashrc` file, which you should see when running `ls -a` from your home directory (`~`). The `.bashrc` file is a config file that is executed every time your terminal loads such as when you login to `hammer` over SSH. Go ahead and type `cat ~/.bashrc` to view its contents. You should see something like below:
 
 ```sh
 # .bashrc
@@ -110,9 +114,11 @@ For students with Linux and macOS machines: try making an alias in your local ma
 alias hammer="ssh <your_CS_username>@hammer.cs.ucr.edu"
 ```
 
+> Note: If you are off UCR campus, you should instead make an alias for `bolt`, since you will log into hammer from there.  It is possible to make this extra "hop" transparent, but setting this up is beyond the scope of this lab.
+
 ## Command Line Compilation
 
-GCC is the GNU project C Compiler and is one of the most used compilers for C code (macOS previously used GCC but not uses another compiler called Clang). It typically also comes with G++ which is a similar compiler for C++ code. The `g++` command invokes this compiler from the command line. To demonstrate how it works, go ahead and write a simple `hello world!` program using the command line editor of your choice (save the file as `main1.cpp`):
+GCC is the GNU project C Compiler and is one of the most used compilers for C code (macOS previously used GCC but now uses another compiler called Clang.  GCC and Clang are largely compatible, and g++ is often aliased to clang on MacOS.). It typically also comes with G++, which is used for C++ code. The `g++` command invokes this compiler from the command line. To demonstrate how it works, go ahead and write a simple `hello world!` program using the command line editor of your choice (save the file as `main1.cpp`):
 
 ```c++
 #include <iostream>
@@ -144,9 +150,11 @@ Most of the time you want to give your program a recognizable name. Adding the `
 g++ -std=c++11 -o hello_world main1.cpp
 ```
 
+> Note: other useful flags that are commonly used include `-g` (add debugging information), `-O2` or `-O3` (optimization flags), and `-Wall` (enable all warnings).
+
 You have now created an executable called `hello_world` and can execute it by typing `./hello_world`.
 
-When developing larger programs in object-oriented languages (like you will in this class), it is common to break up work into multiple source and header files (in C++'s case, `.cpp` and `.hpp` files respectively). The g++ compiler allows you to compile multiple files into a single executable.
+When developing larger programs in object-oriented languages (like you will in this class), it is common to break up work into multiple source and header files (in C++'s case, `.cpp`/`.cxx`/`.cc` for source files and `.hpp`/`.h` for header files). The g++ compiler allows you to compile multiple files into a single executable.
 
 Before we write our files, lets create some directories to seperate our files and make things easier to find. Create a `src` directory and a `header` directory where we will put the respective source and header files. We will be creating a simple Rectangle class which has a height and width and calculates the rectangle's area. Go ahead and make a header file called `rectangle.hpp` in the `header` directory, and add the following code:
 
@@ -168,6 +176,8 @@ class Rectangle {
 ```
 
 > The `#ifndef`, `#define`, and `#endif` are known as [sharp guards or include guards](https://www.cprogramming.com/tutorial/cpreprocessor.html) and cause the compiler to only include this file once even when its referenced multiple times. It is a good idea to add these to the top of all your header files, and we will cover them more in a future lab.
+
+> Tip: Inclusion guards rely on the use of a token (`RECTANGLE_HPP` in the code above) that is unique; the token must not be used for any other purpose (including names of variables, classes, or functions).  This token is often formed from the name of the file, but be careful if your source contains header files in different directories with the same name (or if you are using a library that contains a file with the same name).  Clashes between inclusion guards commonly occur when copying a header but forgetting to change the inclusion guard token.  This mistake leads to very perplexing compiler errors, usually that the compiler cannot find a class or function that is defined in a header that has been included.
 
 Also create a source file called `rectangle.cpp` in the `src` directory, and add the following code:
 
@@ -214,6 +224,8 @@ g++ -std=c++11 -o area_calculator src/main1.cpp src/rectangle.cpp
 ```
 
 Notice that we didn't include the header file `rectangle.hpp` as an argument. The `#include "rectangle.hpp"` within `rectangle.cpp` tells the compiler to include the header for us (and is why the include guards are necessary). Nice! Go ahead and run `./area_calculator`. You should see `Rectangle area: 12` as output.
+
+> Tip: Specifying a header file as an argument to the compiler is not necessarily an error, but it may do something very different from what you might expect.  This may lead to errors that are very difficult to track down, such as causing the compiler to *not notice* changes made to the header file.  In the case of `g++` and `clang++`, it will create a `.gch` file; deleting this file will resolve the problem.
 
 ### Make
 
@@ -360,7 +372,7 @@ git status
 
 The `status` command lists the current status of your Git repository, mostly showing whcih files have changes. In the output, there is a section labeled "untracked files." Notice the files in that section. This means that Git knows these files exist, but isn’t currently keeping track of changes to them. We want to keep track of all the `.cpp` `.hpp` files and `CMakeLists.txt`, but not the `area_calculator` file since that should be recompiled to run correctly on different machines. It is important to note that Git does not automatically save changes to your files either locally or on GitHub. When you have made a set of changes that you want to save, you will have to use the commands we are going to introduce below so you will use these commands very often.
 
-We don’t want Git to continue to tell us that `area_calculator` is untracked, but luckily Git has a solution for this problem. You can create a file called `.gitignore` that will contain a list of all of the files that you want Git to ignore when it tells you what is/isn’t tracked and modified. Create a file named `.gitignore` and add `area_calculator` to it. Now run `git status` again and take a look at the output. Notice that `area_calculator` is no longer listed, only the `.cpp` `.hpp`, `CMakeLists.txt` and the new `.gitignore` files are listed as untracked. Now, we can add all of these files to our project with the following commands:
+We don’t want Git to continue to tell us that `area_calculator` is untracked, but luckily Git has a solution for this problem. You can create a file called `.gitignore` that will contain a list of all of the files that you want Git to ignore when it tells you what is/isn’t tracked and modified. Create a file named `.gitignore` and add `area_calculator` to it. Now run `git status` again and take a look at the output. Notice that `area_calculator` is no longer listed, only the `.cpp`, `.hpp`, `CMakeLists.txt` and the new `.gitignore` files are listed as untracked. Now, we can add all of these files to our project with the following commands:
 
 ```sh
 git add header/rectangle.hpp
@@ -371,7 +383,7 @@ git add CMakeLists.txt
 git add .gitignore
 ```
 
-> Note: Do not add executables, object files, or temporary files which are re-generated during compilation to your git repo, only add source files and other necessary files for your submission (these are listed in the assignment specifications). Tracking executables uses LOTS of disk space and they are unlikely to work on other peoples machines. **If we see these files in your Git repos, your grade on the assignment will be docked 20%**. You should use a `.gitignore` file so that they don’t appear in your Git status or accidentally get added to your repository.
+> Note: Do not add executables, object files, or temporary files which are re-generated during compilation to your git repo, only add source files and other necessary files for your submission (these are listed in the assignment specifications). Tracking executables uses LOTS of disk space and they are unlikely to work on other peoples machines. **If we see these files in your Git repos, your grade on the assignment will be docked 20%**. You should use a `.gitignore` file so that they don’t appear in your Git status or accidentally get added to your repository.  The `.gitignore` file supports wildcards, so that the entry `*.o` will cause all object files to be ignored.
 
 Now, when we run Git status, there is a section labeled "Changes to be committed" with the files that were just added underneath it. This means that Git now thinks these files are part of the project, and will begin to track changes to it.
 
@@ -447,6 +459,8 @@ After editing the file with the above message, exit your editor and the commit s
 
 > Note: The -m flag should only be used when writing very short commit messages, and otherwise you should use the interactive mode to have both a subject and commit body. For some more tips on writing effective git commit messages, read [this blog post](https://chris.beams.io/posts/git-commit/).
 
+> Tip: There are many useful shortcuts that can be used to speed up common workflows.  Multiple files can be added at once: `git add file1 file2 file3`.  You can also specify files to commit directly: `git commit file1 file2 file3`.  You can commit all modified files with `git commit -a`, but be very careful to check first that you actually want to commit all modified files in one commit.
+
 Let's make one more commit so we'll have something to play with. Update your `main1.cpp` to calculate one more rectangle's area:
 
 ```c++
@@ -493,6 +507,8 @@ We can then commit the changes using:
 ```sh
 $ git commit -m "Add one more rectangle and compute its area”
 ```
+
+> Note: `git add` is used for several *different* tasks, such as telling git to start tracking a new file, "staging" a modified file for a subsequent commit, or signifying that a conflict has been resolved (we will visit conflicts later).  `git rm` and `git mv` can be used to remove or move files; they work the same way as the regular `rm` and `mv` commands, but they also tell git to make the corresponding changes to the repository.
 
 ### Git Push & Pull
 
