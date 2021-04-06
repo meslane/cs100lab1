@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/class/classes/mslan002/template-lab-01-intro-to-sct-unit-testing/c-echo.h
+iostream
+-
+
+/class/classes/mslan002/template-lab-01-intro-to-sct-unit-testing/main2.cpp
+c-echo.h
+/class/classes/mslan002/template-lab-01-intro-to-sct-unit-testing/c-echo.h
+

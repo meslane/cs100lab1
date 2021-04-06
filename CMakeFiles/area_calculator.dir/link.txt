@@ -1,0 +1,1 @@
+/opt/rh/devtoolset-6/root/usr/bin/c++    -rdynamic CMakeFiles/area_calculator.dir/src/main1.cpp.o CMakeFiles/area_calculator.dir/src/rectangle.cpp.o  -o area_calculator 

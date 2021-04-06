@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/class/classes/mslan002/template-lab-01-intro-to-sct-unit-testing/header/rectangle.hpp
+
+/class/classes/mslan002/template-lab-01-intro-to-sct-unit-testing/src/main1.cpp
+iostream
+-
+../header/rectangle.hpp
+/class/classes/mslan002/template-lab-01-intro-to-sct-unit-testing/header/rectangle.hpp
+
+/class/classes/mslan002/template-lab-01-intro-to-sct-unit-testing/src/rectangle.cpp
+../header/rectangle.hpp
+/class/classes/mslan002/template-lab-01-intro-to-sct-unit-testing/header/rectangle.hpp
+
